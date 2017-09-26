@@ -10,6 +10,7 @@ type fieldItem struct {
 type Logger struct {
 	messages []string
 	fields   []fieldItem
+	Header   string
 }
 
 func (l *Logger) Logf(format string, a ...interface{}) {
@@ -46,6 +47,9 @@ func (l *Logger) Clear() {
 func (l *Logger) Exit() {
 	if l == nil {
 		return
+	}
+	if l.Header != "" {
+		fmt.Println("== " + l.Header + " ==")
 	}
 	for _, str := range l.messages {
 		fmt.Println(str)

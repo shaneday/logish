@@ -57,3 +57,12 @@ func ExampleNilLogger() {
 	l.Clear()
 	// Output:
 }
+
+func ExampleWithHeader() {
+	l := Logger{Header: "Head"}
+	defer l.Exit()
+	l.Field("field1", 1)
+	// Output:
+	// == Head ==
+	// field1: 1
+}
