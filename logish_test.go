@@ -66,3 +66,23 @@ func ExampleWithHeader() {
 	// == Head ==
 	// field1: 1
 }
+
+func ExampleOneline() {
+	l := Logger{Header: "Head"}
+	defer l.ExitOneline()
+	l.Logf("log1")
+	l.Fieldf("field1", "%2.3f", 1.2)
+	l.Fieldf("field2", "%#[1]x(%[1]d)", 123)
+	l.Fieldf("field3", "", "nofmt")
+	// Output:
+	// Head['log1' field1:1.200 field2:0x7b(123) field3:"nofmt"]
+}
+
+func ExampleNilOnelineLogger() {
+	var l *Logger = nil
+	defer l.ExitOneline()
+	l.Field("field1", 1)
+	l.Logf("log1")
+	l.Clear()
+	// Output:
+}

@@ -68,3 +68,31 @@ func (l *Logger) Exit() {
 		fmt.Printf("%-*s %s\n", maxWidth+1, e.label+":", val)
 	}
 }
+
+func (l *Logger) ExitOneline() {
+	if l == nil {
+		return
+	}
+	if l.Header != "" {
+		fmt.Printf("%s[", l.Header)
+	}
+	for i, str := range l.messages {
+		fmt.Printf("'%s'", str)
+		if i < len(l.messages) || l.Header == "" {
+			fmt.Printf(" ")
+		}
+	}
+	for i, e := range l.fields {
+		if e.vformat == "" {
+			e.vformat = "%#v"
+		}
+		val := fmt.Sprintf(e.vformat, e.value)
+		fmt.Printf("%s:%s", e.label, val)
+		if i < len(l.fields)-1 || l.Header == "" {
+			fmt.Printf(" ")
+		}
+	}
+	if l.Header != "" {
+		fmt.Printf("]")
+	}
+}
