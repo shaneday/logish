@@ -49,7 +49,7 @@ func ExampleClear() {
 }
 
 func ExampleNilLogger() {
-	var l *Logger = nil
+	var l *Logger
 	defer l.Exit()
 	l.Field("field1", 1)
 	l.Fieldf("field1", "%d", 1)
@@ -79,7 +79,7 @@ func ExampleOneline() {
 }
 
 func ExampleNilOnelineLogger() {
-	var l *Logger = nil
+	var l *Logger
 	defer l.ExitOneline()
 	l.Field("field1", 1)
 	l.Logf("log1")

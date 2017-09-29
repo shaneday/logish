@@ -7,12 +7,15 @@ type fieldItem struct {
 	vformat string
 	value   interface{}
 }
+
+// A Logger records log entries until they are printed or discarded
 type Logger struct {
 	messages []string
 	fields   []fieldItem
 	Header   string
 }
 
+// Logf adds a basic printf style log entry
 func (l *Logger) Logf(format string, a ...interface{}) {
 	if l == nil {
 		return
@@ -21,6 +24,7 @@ func (l *Logger) Logf(format string, a ...interface{}) {
 	l.messages = append(l.messages, str)
 }
 
+// Field records a field/value entry
 func (l *Logger) Field(label string, a interface{}) {
 	if l == nil {
 		return
@@ -28,6 +32,8 @@ func (l *Logger) Field(label string, a interface{}) {
 	e := fieldItem{label: label, value: a}
 	l.fields = append(l.fields, e)
 }
+
+// Fieldf records a field/value entry, with printf style formatting code
 func (l *Logger) Fieldf(label, vformat string, a interface{}) {
 	if l == nil {
 		return
@@ -36,6 +42,7 @@ func (l *Logger) Fieldf(label, vformat string, a interface{}) {
 	l.fields = append(l.fields, e)
 }
 
+// Clear discards all entried. Call when everything is good and logging is not required
 func (l *Logger) Clear() {
 	if l == nil {
 		return
@@ -44,6 +51,7 @@ func (l *Logger) Clear() {
 	l.fields = []fieldItem{}
 }
 
+// Exit is to be called by defer, it prints the recorded entries
 func (l *Logger) Exit() {
 	if l == nil {
 		return
@@ -69,6 +77,7 @@ func (l *Logger) Exit() {
 	}
 }
 
+// ExitOneline is like Exit, but prints a compact format
 func (l *Logger) ExitOneline() {
 	if l == nil {
 		return
