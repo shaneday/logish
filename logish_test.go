@@ -86,3 +86,13 @@ func ExampleNilOnelineLogger() {
 	l.Clear()
 	// Output:
 }
+
+// Complex types are stored by reference, so will show the value at defer time.
+func ExampleBugga() {
+	l := Logger{}
+	defer l.ExitOneline()
+	x := []int{1}
+	l.Fieldf("x", "%d", x)
+	x[0] = 2
+	// Output: x:[2]
+}
