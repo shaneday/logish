@@ -51,8 +51,8 @@ func (l *Logger) Clear() {
 	l.fields = []fieldItem{}
 }
 
-// Exit is to be called by defer, it prints the recorded entries
-func (l *Logger) Exit() {
+// Flush is to be called by defer, it prints the recorded entries
+func (l *Logger) Flush() {
 	if l == nil {
 		return
 	}
@@ -77,8 +77,8 @@ func (l *Logger) Exit() {
 	}
 }
 
-// ExitOneline is like Exit, but prints a compact format
-func (l *Logger) ExitOneline() {
+// FlushOneline is like Exit, but prints a compact format
+func (l *Logger) FlushOneline() {
 	if l == nil {
 		return
 	}

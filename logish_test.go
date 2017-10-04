@@ -4,7 +4,7 @@ import "fmt"
 
 func ExampleLogf() {
 	l := Logger{}
-	defer l.Exit()
+	defer l.Flush()
 	l.Logf("Hello %d", 1)
 	l.Logf("Hello %d", 2)
 	fmt.Println("Println call")
@@ -16,7 +16,7 @@ func ExampleLogf() {
 
 func ExampleField() {
 	l := Logger{}
-	defer l.Exit()
+	defer l.Flush()
 	l.Field("field1", 1)
 	l.Field("field2withLongName", 1.2)
 	l.Field("field3", "abc")
@@ -28,7 +28,7 @@ func ExampleField() {
 
 func ExampleFieldF() {
 	l := Logger{}
-	defer l.Exit()
+	defer l.Flush()
 	l.Fieldf("field1", "%2.3f", 1.2)
 	l.Fieldf("field2", "%#[1]x %[1]d", 123)
 	// Output:
@@ -38,7 +38,7 @@ func ExampleFieldF() {
 
 func ExampleClear() {
 	l := Logger{}
-	defer l.Exit()
+	defer l.Flush()
 	l.Logf("log1")
 	l.Field("field1", 1)
 	l.Fieldf("field2", "%x", 2)
@@ -50,7 +50,7 @@ func ExampleClear() {
 
 func ExampleNilLogger() {
 	var l *Logger
-	defer l.Exit()
+	defer l.Flush()
 	l.Field("field1", 1)
 	l.Fieldf("field1", "%d", 1)
 	l.Logf("log1")
@@ -60,7 +60,7 @@ func ExampleNilLogger() {
 
 func ExampleWithHeader() {
 	l := Logger{Header: "Head"}
-	defer l.Exit()
+	defer l.Flush()
 	l.Field("field1", 1)
 	// Output:
 	// == Head ==
@@ -69,7 +69,7 @@ func ExampleWithHeader() {
 
 func ExampleOneline() {
 	l := Logger{Header: "Head"}
-	defer l.ExitOneline()
+	defer l.FlushOneline()
 	l.Logf("log1")
 	l.Fieldf("field1", "%2.3f", 1.2)
 	l.Fieldf("field2", "%#[1]x(%[1]d)", 123)
@@ -80,7 +80,7 @@ func ExampleOneline() {
 
 func ExampleNilOnelineLogger() {
 	var l *Logger
-	defer l.ExitOneline()
+	defer l.FlushOneline()
 	l.Field("field1", 1)
 	l.Logf("log1")
 	l.Clear()
@@ -90,7 +90,7 @@ func ExampleNilOnelineLogger() {
 // Complex types are stored by reference, so will show the value at defer time.
 func ExampleBugga() {
 	l := Logger{}
-	defer l.ExitOneline()
+	defer l.FlushOneline()
 	x := []int{1}
 	l.Fieldf("x", "%d", x)
 	x[0] = 2
