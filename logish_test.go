@@ -1,6 +1,9 @@
 package logish
 
-import "fmt"
+import (
+	"encoding/hex"
+	"fmt"
+)
 
 func ExampleLogf() {
 	l := Logger{}
@@ -95,4 +98,43 @@ func ExampleBugga() {
 	l.Fieldf("x", "%d", x)
 	x[0] = 2
 	// Output: x:[2]
+}
+
+// Realistic example
+func ExampleTSDecode() {
+	m := map[string]uint16{}
+	l := &Logger{}
+	defer l.Flush()
+	ts, _ := hex.DecodeString("47410030075000007b0c7e00000001")
+
+	field := func(l *Logger, m map[string]uint16, name string, val uint16) {
+		l.Field(name, val)
+		if m != nil {
+			m[name] = val
+		}
+	}
+	field(l, m, "SyncByte", uint16(ts[0]))
+	field(l, m, "TransportErrorIndicator", uint16(ts[1]>>7&1))
+	field(l, m, "PayloadUnitStartIndicator", uint16(ts[1]>>6&1))
+	field(l, m, "TransportPriority", uint16(ts[1]>>5&1))
+	field(l, m, "PID", uint16(ts[1]&0x1F)<<8|uint16(ts[2]))
+	field(l, m, "TransportScramblingControl", uint16(ts[3]>>2&3))
+	field(l, m, "AdaptationFieldControl", uint16(ts[3]>>4&3))
+	field(l, m, "ContainsAdaptationField", uint16(ts[3]>>5&1))
+	field(l, m, "ContainsPayload", uint16(ts[3]>>4&1))
+	field(l, m, "ContinuityCounter", uint16(ts[3]&0xf))
+	l.Logf("PID=%d", m["PID"])
+
+	// Output:
+	// PID=256
+	// SyncByte:                   0x47
+	// TransportErrorIndicator:    0x0
+	// PayloadUnitStartIndicator:  0x1
+	// TransportPriority:          0x0
+	// PID:                        0x100
+	// TransportScramblingControl: 0x0
+	// AdaptationFieldControl:     0x3
+	// ContainsAdaptationField:    0x1
+	// ContainsPayload:            0x1
+	// ContinuityCounter:          0x0
 }
