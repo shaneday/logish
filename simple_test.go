@@ -48,3 +48,20 @@ func ExampleSimpleFullLine() {
 	// Forced full line message
 	// tag1: msg1b
 }
+
+func ExampleSimpleNewlines() {
+	Default.dest = os.Stdout // Update to go-test capture
+	Logf("tag1", "msg1a-nl\n")
+	Logf("tag1", "msg1b")
+	Logf("tag1", "\nnl-msg1c")
+	Logf("tag1", "msg1d")
+	Logf("tag1", "\nnl-msg1e-nl\n")
+	Logf("tag1", "msg1f")
+	Logf("", "") // force new line
+	// Output:
+	// tag1: msg1a-nl
+	// tag1: msg1b
+	// tag1: nl-msg1c msg1d
+	// tag1: nl-msg1e-nl
+	// tag1: msg1f
+}

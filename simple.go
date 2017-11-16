@@ -14,9 +14,25 @@ type Simple struct {
 
 // Logf writes a log message fragment. Fragments with the same tag are appended
 // to the line (space separated), while non-matching tags trigger a new line.
-// Tags are printed at the start on each line, unless the first character of the
-// tag is '-'. An empty tag forces the message on to a line by itself.
+// Tags are printed at the start of each line, unless the first character of the
+// tag is '-'. An empty tag forces the message on to a line by itself. If the
+// format has a '\n' prefix then a new line is started even if the tag is
+// unchanged, and a '\n' suffix causes a newline after this message.
 func (o *Simple) Logf(tag, format string, a ...interface{}) {
+
+	// Trigger newline before msg if format has '\n' prefix
+	if len(format) > 0 && format[0] == '\n' {
+		format = format[1:]
+		fmt.Fprintf(o.dest, "\n")
+		o.currentTag = ""
+	}
+
+	// Force newline after msg if format has \n suffix
+	newlineSuffix := len(format) > 0 && format[len(format)-1] == '\n'
+	if newlineSuffix {
+		format = format[0 : len(format)-1]
+	}
+
 	// Easy case, append to existing line
 	if tag != "" && tag == o.currentTag {
 		fmt.Fprintf(o.dest, " "+format, a...)
@@ -37,8 +53,9 @@ func (o *Simple) Logf(tag, format string, a ...interface{}) {
 	fmt.Fprintf(o.dest, format, a...)
 
 	// Full line message, add newline
-	if tag == "" {
+	if tag == "" || newlineSuffix {
 		fmt.Fprintf(o.dest, "\n")
+		tag = ""
 	}
 
 	// Record tag for next time
