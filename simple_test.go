@@ -6,11 +6,11 @@ import (
 
 func ExampleSimple() {
 	Default.dest = os.Stdout // Update to go-test capture
-	Logf("tag1", "msg1a")
-	Logf("tag1", "msg1b")
+	Logf("tag1", "msg1a=%d", 123)
+	Logf("tag1", "msg1b=%.3f", 32.1)
 	Logf("", "") // force new line
 	// Output:
-	// tag1: msg1a msg1b
+	// tag1: msg1a=123 msg1b=32.100
 }
 
 func ExampleSimpleIntermix() {
