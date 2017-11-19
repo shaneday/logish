@@ -51,6 +51,7 @@ func ExampleSimpleFullLine() {
 
 func ExampleSimpleNewlines() {
 	Default.dest = os.Stdout // Update to go-test capture
+	Logf("tag1", "msg0")
 	Logf("tag1", "msg1a-nl\n")
 	Logf("tag1", "msg1b")
 	Logf("tag1", "\nnl-msg1c")
@@ -59,7 +60,7 @@ func ExampleSimpleNewlines() {
 	Logf("tag1", "msg1f")
 	Logf("", "") // force new line
 	// Output:
-	// tag1: msg1a-nl
+	// tag1: msg0 msg1a-nl
 	// tag1: msg1b
 	// tag1: nl-msg1c msg1d
 	// tag1: nl-msg1e-nl

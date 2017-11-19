@@ -36,6 +36,10 @@ func (o *Simple) Logf(tag, format string, a ...interface{}) {
 	// Easy case, append to existing line
 	if tag != "" && tag == o.currentTag {
 		fmt.Fprintf(o.dest, " "+format, a...)
+		if newlineSuffix {
+			fmt.Fprintf(o.dest, "\n")
+			o.currentTag = ""
+		}
 		return
 	}
 
