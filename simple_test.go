@@ -16,58 +16,59 @@ func teardown(int) {
 
 func ExampleSimple() {
 	defer teardown(setup())
-	Logf("tag1", "msg1a=%d", 123)
-	Logf("tag1", "msg1b=%.3f", 32.1)
+	Logf("TS[1]", "PID=%x", 0x100)
+	Logf("TS[1]", "PUSI=%d", 1)
 	// Output:
-	// tag1: msg1a=123 msg1b=32.100
+	// TS[1]: PID=100 PUSI=1
 }
 
 func ExampleSimpleIntermix() {
 	defer teardown(setup())
-	Logf("tag1", "msg1a")
-	Logf("tag2", "msg2a")
-	Logf("tag1", "msg1b")
+	Logf("TS[1]", "PID=%x PUSI=%d", 0x100, 1)
+	Logf(" PES", "SID=%x PTS=%.3f", 0xe0, 1.442)
+	Logf("TS[1]", "Feeding video pipeline %d bytes", 157)
 	// Output:
-	// tag1: msg1a
-	// tag2: msg2a
-	// tag1: msg1b
+	// TS[1]: PID=100 PUSI=1
+	//  PES: SID=e0 PTS=1.442
+	// TS[1]: Feeding video pipeline 157 bytes
 }
 
 func ExampleSimpleTagless() {
 	defer teardown(setup())
-	Logf("tag1", "msg1a")
-	Logf("-notag", "tagless-msg")
-	Logf("tag1", "msg1b")
+	Logf("TS[1]", "PID=%x", 0x100)
+	Logf("-PES", "Found video PES:")
+	Logf("-PES", "SID=%x PTS=%.3f", 0xe0, 1.442)
+	Logf("TS[1]", "PUSI=%d", 1)
 	// Output:
-	// tag1: msg1a
-	// tagless-msg
-	// tag1: msg1b
+	// TS[1]: PID=100
+	// Found video PES: SID=e0 PTS=1.442
+	// TS[1]: PUSI=1
 }
 
 func ExampleSimpleFullLine() {
 	defer teardown(setup())
-	Logf("tag1", "msg1a")
-	Logf("", "Forced full line message")
-	Logf("tag1", "msg1b")
+	Logf("TS[1]", "PID=%x", 0x100)
+	Logf("", "Warning: packet payload is encrypted")
+	Logf("TS[1]", "PUSI=%d", 1)
 	// Output:
-	// tag1: msg1a
-	// Forced full line message
-	// tag1: msg1b
+	// TS[1]: PID=100
+	// Warning: packet payload is encrypted
+	// TS[1]: PUSI=1
 }
 
 func ExampleSimpleNewlines() {
 	defer teardown(setup())
-	Logf("tag1", "msg0")
-	Logf("tag1", "msg1a-nl\n")
-	Logf("tag1", "msg1b")
-	Logf("tag1", "\nnl-msg1c")
-	Logf("tag1", "msg1d")
-	Logf("tag1", "\nnl-msg1e-nl\n")
-	Logf("tag1", "msg1f")
+	Logf("TS[1]", "PID=%x", 0x100)
+	Logf("TS[1]", "(Message ending a line)\n")
+	Logf("TS[1]", "PUSI=%d", 1)
+	Logf("TS[1]", "\n(Message on new line)")
+	Logf("TS[1]", "AF=%d", 1)
+	Logf("TS[1]", "\n(Message on line alone)\n")
+	Logf("TS[1]", "PCR=%.3f", 0.7)
 	// Output:
-	// tag1: msg0 msg1a-nl
-	// tag1: msg1b
-	// tag1: nl-msg1c msg1d
-	// tag1: nl-msg1e-nl
-	// tag1: msg1f
+	// TS[1]: PID=100 (Message ending a line)
+	// TS[1]: PUSI=1
+	// TS[1]: (Message on new line) AF=1
+	// TS[1]: (Message on line alone)
+	// TS[1]: PCR=0.700
 }
