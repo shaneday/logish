@@ -4,21 +4,29 @@ import (
 	"os"
 )
 
+func setup() (i int) {
+	// Update dest to the temp redirect that 'go test' has set up
+	Default.dest = os.Stdout
+	return 0 // allow 'defer teardown(setup())' idiom
+}
+func teardown(int) {
+	// Force closing any partial line in progress
+	Logf("", "")
+}
+
 func ExampleSimple() {
-	Default.dest = os.Stdout // Update to go-test capture
+	defer teardown(setup())
 	Logf("tag1", "msg1a=%d", 123)
 	Logf("tag1", "msg1b=%.3f", 32.1)
-	Logf("", "") // force new line
 	// Output:
 	// tag1: msg1a=123 msg1b=32.100
 }
 
 func ExampleSimpleIntermix() {
-	Default.dest = os.Stdout // Update to go-test capture
+	defer teardown(setup())
 	Logf("tag1", "msg1a")
 	Logf("tag2", "msg2a")
 	Logf("tag1", "msg1b")
-	Logf("", "") // force new line
 	// Output:
 	// tag1: msg1a
 	// tag2: msg2a
@@ -26,11 +34,10 @@ func ExampleSimpleIntermix() {
 }
 
 func ExampleSimpleTagless() {
-	Default.dest = os.Stdout // Update to go-test capture
+	defer teardown(setup())
 	Logf("tag1", "msg1a")
 	Logf("-notag", "tagless-msg")
 	Logf("tag1", "msg1b")
-	Logf("", "") // force new line
 	// Output:
 	// tag1: msg1a
 	// tagless-msg
@@ -38,11 +45,10 @@ func ExampleSimpleTagless() {
 }
 
 func ExampleSimpleFullLine() {
-	Default.dest = os.Stdout // Update to go-test capture
+	defer teardown(setup())
 	Logf("tag1", "msg1a")
 	Logf("", "Forced full line message")
 	Logf("tag1", "msg1b")
-	Logf("", "") // force new line
 	// Output:
 	// tag1: msg1a
 	// Forced full line message
@@ -50,7 +56,7 @@ func ExampleSimpleFullLine() {
 }
 
 func ExampleSimpleNewlines() {
-	Default.dest = os.Stdout // Update to go-test capture
+	defer teardown(setup())
 	Logf("tag1", "msg0")
 	Logf("tag1", "msg1a-nl\n")
 	Logf("tag1", "msg1b")
@@ -58,7 +64,6 @@ func ExampleSimpleNewlines() {
 	Logf("tag1", "msg1d")
 	Logf("tag1", "\nnl-msg1e-nl\n")
 	Logf("tag1", "msg1f")
-	Logf("", "") // force new line
 	// Output:
 	// tag1: msg0 msg1a-nl
 	// tag1: msg1b
