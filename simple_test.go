@@ -72,3 +72,13 @@ func ExampleSimpleNewlines() {
 	// TS[1]: (Message on line alone)
 	// TS[1]: PCR=0.700
 }
+
+func ExampleDoubleNewlineBug() {
+	defer teardown(setup())
+	Logf("tag", "one\n")
+	Logf("tag", "\ntwo")
+	// Output:
+	// tag: one
+	// tag: two
+
+}

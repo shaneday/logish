@@ -22,8 +22,10 @@ func (o *Simple) Logf(tag, format string, a ...interface{}) {
 
 	// Trigger newline before msg if format has '\n' prefix
 	if len(format) > 0 && format[0] == '\n' {
+		if o.currentTag != "" {
+			fmt.Fprintf(o.dest, "\n")
+		}
 		format = format[1:]
-		fmt.Fprintf(o.dest, "\n")
 		o.currentTag = ""
 	}
 
