@@ -12,6 +12,9 @@ type Simple struct {
 	dest       io.Writer
 }
 
+// Special marker to indicate to use whatever the current tag is
+const KEEPTAG = "\000KEEPTAG\000"
+
 // Logf writes a log message fragment. Fragments with the same tag are appended
 // to the line (space separated), while non-matching tags trigger a new line.
 // Tags are printed at the start of each line, unless the first character of the
@@ -20,6 +23,9 @@ type Simple struct {
 // unchanged, and a '\n' suffix causes a newline after this message.
 func (o *Simple) Logf(tag, format string, a ...interface{}) {
 
+	if tag == KEEPTAG {
+		tag = o.currentTag
+	}
 	if format == "\n" {
 		tag = ""
 	}

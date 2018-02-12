@@ -103,3 +103,15 @@ func ExampleNewlineSpaceBug() {
 	// tag: one
 	// tag: two
 }
+
+func ExampleKeepTag() {
+	defer teardown(setup())
+	Logf("tag", "one") // In caller
+	// Intended for use in utility functions with very little to say
+	Logf(KEEPTAG, "two") // In util func (stay on line)
+	Logf("", "")
+	Logf(KEEPTAG, "three") // In util func (no current line)
+	// Output:
+	// tag: one two
+	// three
+}
