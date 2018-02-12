@@ -92,3 +92,14 @@ func ExampleEmptyLogBug() {
 	// tag: one
 	// tag: two
 }
+
+func ExampleNewlineSpaceBug() {
+	defer teardown(setup())
+	Logf("tag", "one")
+	// Bug was this triggering extra space before "two" msg
+	Logf("tag", "\n")
+	Logf("tag", "two") // This was pre-padding with a space
+	// Output:
+	// tag: one
+	// tag: two
+}

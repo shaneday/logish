@@ -20,6 +20,10 @@ type Simple struct {
 // unchanged, and a '\n' suffix causes a newline after this message.
 func (o *Simple) Logf(tag, format string, a ...interface{}) {
 
+	if format == "\n" {
+		tag = ""
+	}
+
 	// Trigger newline before msg if format has '\n' prefix
 	if len(format) > 0 && format[0] == '\n' {
 		if o.currentTag != "" {
