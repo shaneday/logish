@@ -80,5 +80,15 @@ func ExampleDoubleNewlineBug() {
 	// Output:
 	// tag: one
 	// tag: two
+}
 
+func ExampleEmptyLogBug() {
+	defer teardown(setup())
+	Logf("tag", "one")
+	// Bug was this triggering newlines before and after "" msg
+	Logf("", "")
+	Logf("tag", "two")
+	// Output:
+	// tag: one
+	// tag: two
 }

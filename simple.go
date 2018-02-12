@@ -59,7 +59,7 @@ func (o *Simple) Logf(tag, format string, a ...interface{}) {
 	fmt.Fprintf(o.dest, format, a...)
 
 	// Full line message, add newline
-	if tag == "" || newlineSuffix {
+	if (tag == "" && format != "") || newlineSuffix {
 		fmt.Fprintf(o.dest, "\n")
 		tag = ""
 	}
